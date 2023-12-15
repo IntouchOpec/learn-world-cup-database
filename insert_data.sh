@@ -9,15 +9,12 @@ fi
 
 get_or_create_team () { 
   TEAM_ID=$($PSQL "SELECT team_id FROM teams WHERE name = '$1'")
-  # if not found
   if [[ -z $TEAM_ID ]]
   then
-    # insert team
     local INSERT_TEAM_RESULT=$($PSQL "INSERT INTO teams(name) values ('$1')")
     if [[ $INSERT_TEAM_RESULT == "INSERT 0 1" ]]
     then
       TEAM_ID=$($PSQL "SELECT team_id FROM teams WHERE name = '$1'")
-      # echo "Inserted into team, $1"
     fi
   fi
   echo $TEAM_ID
@@ -47,10 +44,5 @@ do
     TEAM_WINNER_ID=$(get_or_create_team "$WINNER")
     TEAM_OPPONENT_ID=$(get_or_create_team "$OPPONENT")
     create_game $YEAR "$ROUND" $TEAM_WINNER_ID $TEAM_OPPONENT_ID $WINNERGOALS $OPPONENTGOALS
-    # NUMBER_OF_GAMES_RECORD=$($PSQL "SELECT COUNT(*) FROM games")
-    # if [[ $NUMBER_OF_GAMES_RECORD == 32 ]]
-    # then
-    #   echo $NUMBER_OF_GAMES_RECORD 
-    # fi
   fi
 done
